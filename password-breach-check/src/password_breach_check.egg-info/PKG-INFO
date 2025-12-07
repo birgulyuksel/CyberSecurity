@@ -1,0 +1,98 @@
+Metadata-Version: 2.4
+Name: password-breach-check
+Version: 0.1.0
+Summary: K-anonimlik (HIBP range API) ile parola ihlali kontrol aracı
+Author-email: Student <student@example.com>
+License: MIT License
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=2.31.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4; extra == "dev"
+Requires-Dist: pytest-cov>=4.1; extra == "dev"
+Requires-Dist: ruff>=0.6.0; extra == "dev"
+Requires-Dist: mypy>=1.7.0; extra == "dev"
+Dynamic: license-file
+
+# Password Breach Check (HIBP k-Anonymity)
+
+**TR** | [EN](#english)
+
+Bu araç, bir parolanın halka açık ihlal veritabanlarında görünüp görünmediğini **Have I Been Pwned (HIBP)** servisinin **k-anonimlik (Range API)** uç noktası ile kontrol eder. Parolanın kendisi dışarı çıkmaz; yalnızca SHA‑1 karmasının **ilk 5 hex** karakteri (prefix) HIBP'ye gönderilir.
+
+> Gizlilik Notu: `Add-Padding: true` başlığı ile yanıtın rastgele satırlarla doldurulması istenir. Bu, trafik analizine karşı ek koruma sağlar.
+
+## Kurulum (Geliştirici Modu)
+
+```bash
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+## Kullanım
+
+### Tek parola
+```bash
+python -m src.cli check
+# Şifreyi güvenli şekilde sorar (ekrana yazmaz). Çıkış kodu: 0=OK, 2=BREACHED
+```
+
+### Dosyadan (satır başına bir parola)
+```bash
+python -m src.cli file passwords.txt --fail-on-breached
+# Her satır için count döner. Bir ihlal bulunursa 2 ile çıkar.
+```
+
+## Testler
+```bash
+pytest
+```
+
+## Mimarî
+- `src/utils.py`: hashing, logging yardımcıları
+- `src/hibp_client.py`: HIBP Range API istemcisi, yanıt ayrıştırma
+- `src/checker.py`: iş akışı (parola→SHA1→prefix→sorgu→eşleşme)
+- `src/cli.py`: CLI (tek parola veya dosya)
+
+## Güvenlik ve Gizlilik Değerlendirmesi (Özet)
+- **K-anon akış**: SHA‑1 → ilk 5 hex → HIBP → dönen suffix listesinde tam eşleşme arama.
+- **Gizlilik**: Parola asla loglanmaz/disk yazılmaz; yalnızca prefix dışarı çıkar.
+- **Aktarım güvenliği**: HTTPS/TLS; `User-Agent` zorunlu. `Add-Padding: true` ile yanıt doldurma.
+- **Tehdit Modeli (STRIDE)**: 
+  - *Spoofing*: Yanlış HIBP yanıtı → TLS doğrulaması, hata yönetimi.
+  - *Tampering*: Yanıt manipülasyonu → beklenen formatı doğrulayan ayrıştırma.
+  - *Repudiation*: Log seviyeleri; PII yok.
+  - *Information Disclosure*: Masking, parola saklamama, padding.
+  - *Denial of Service*: 429 durumunda bekleme/backoff; time-out ayarları.
+  - *Elevation of Privilege*: Yetki yok; yalnızca istemci.
+
+## Lisans
+MIT
+
+---
+
+## English
+
+This tool checks whether a password appears in public breach corpora using **Have I Been Pwned**'s **k-anonymity (range)** API. Only the **first 5 hex characters** of the SHA‑1 hash are sent to HIBP; the password never leaves your machine.
+
+### Install
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+### Usage
+```bash
+python -m src.cli check
+python -m src.cli file passwords.txt --fail-on-breached
+```
+
+### Tests
+```bash
+pytest
+```
+
+### Notes
+- Use a meaningful `User-Agent` string (e.g., your app name and a contact).
+- Do **not** store or log plaintext passwords.
