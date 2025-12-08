@@ -49,7 +49,7 @@ password-breach-check/
 │  ├─ config.py
 │  ├─ hibp_client.py      # HIBP K-anon API istemcisi
 │  ├─ checker.py          # SHA-1, pwned check, strength analyzer
-│  └─ gui_app.py          # Modern GUI arayüzü
+│  ├─ gui_app.py          # Modern GUI arayüzü
 │  └─ main.py             # CLI arayüzü
 │
 ├─ tests/
@@ -57,9 +57,7 @@ password-breach-check/
 │  ├─ test_hashing.py
 │  ├─ test_checker.py
 │  ├─ test_hibpclient.py
-│  ├─ test_strength.py
-│  └─ test_utils.py
-│  └─ test_parse.py
+│  └─ test_strength.py
 │
 ├─ requirements.txt
 ├─ README.md
