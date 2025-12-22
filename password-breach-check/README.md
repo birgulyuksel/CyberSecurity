@@ -44,6 +44,9 @@ Proje üç ana bileşenden oluşur:
 
 ```text
 password-breach-check/
+├─ docs/
+│  ├─ Birgul_Yuksel_Final_V1.docx
+│  ├─ Birgul_Yuksel_Final_V2.docx
 ├─ src/
 │  ├─ __init__.py
 │  ├─ config.py
@@ -54,9 +57,12 @@ password-breach-check/
 │
 ├─ tests/
 │  ├─ conftest.py
+│  ├─ __init__.py
 │  ├─ test_hashing.py
 │  ├─ test_checker.py
 │  ├─ test_hibpclient.py
+│  ├─ test_e2e_cli.py
+│  ├─ test_prefix_suffix.py
 │  └─ test_strength.py
 │
 ├─ requirements.txt
