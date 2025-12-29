@@ -113,7 +113,7 @@ def main(argv=None) -> int:
         if is_pwned:
             print(
                 f"⚠ BU PAROLA İHLAL EDİLMİŞ! "
-                f"haveibeenpwned veritabanında yaklaşık {count} kez görünüyor.)"
+                f"haveibeenpwned veritabanında yaklaşık {count} kez görünüyor."
             )
             print("Bu parolayı DERHAL değiştirmeli ve tekrar kullanmamalısınız. :(")
         else:

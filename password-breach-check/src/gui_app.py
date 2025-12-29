@@ -11,8 +11,9 @@ class PasswordCheckGUI(ctk.CTk):
 
         # Pencere ayarları
         self.title("Password Breach Checker")
-        self.geometry("650x450")
-        self.resizable(False, False)
+        self.geometry("900x650")
+        self.minsize(800, 600)
+        self.resizable(True, True)
 
         ctk.set_appearance_mode("dark")      # "light", "dark", "system"
         ctk.set_default_color_theme("blue")  # "blue", "green", "dark-blue"
@@ -188,8 +189,9 @@ class PasswordCheckGUI(ctk.CTk):
             return
 
         try:
-            is_pwned, count = check_password_pwned(password)
             strength = evaluate_password_strength(password)
+            is_pwned, count = check_password_pwned(password)
+            
         except HibpClientError as exc:
             messagebox.showerror("API Hatası", f"HIBP hatası: {exc}")
             return
@@ -219,7 +221,7 @@ class PasswordCheckGUI(ctk.CTk):
                 "\nÖneri: Bu parolayı derhal değiştirin ve farklı hesaplarda tekrar kullanmayın.\n",
             )
         else:
-            self.result_box.insert("end", "✅ Bu parola HIBP veritabanında bulunmamış.\n")
+            self.result_box.insert("end", "Bu parola HIBP veritabanında bulunmamış.\n")
             self.result_box.insert(
                 "end",
                 "Yine de benzersiz, uzun ve karmaşık parolalar kullanmanız önerilir.\n",
